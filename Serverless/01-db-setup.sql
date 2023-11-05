@@ -22,7 +22,7 @@ SECRET = '<get a sas token from the data lake ADLS account>'
 -- create the data source using the scoped credential.
 -- ----------------------------------------------------------------------------  
 CREATE/DROP EXTERNAL DATA SOURCE LatestPrices WITH (
-    LOCATION = 'https://nrgdxlake.dfs.core.windows.net/warehouse/DB1',
+    LOCATION = 'https://yourdatalake.dfs.core.windows.net/warehouse/DB1',
     CREDENTIAL = sqlondemand
 );  
 
