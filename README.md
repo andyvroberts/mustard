@@ -1,2 +1,4 @@
 # mustard
-Azure Synapse Analytics configuration, settings and playground
+Azure Synapse Analytics configuration, settings and playground.
+
+

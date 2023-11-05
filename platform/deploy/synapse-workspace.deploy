@@ -1,0 +1,2 @@
+paramFile=synapse.workspace.params.dev.json
+az deployment sub create --location uksouth --template-file ../synapse/main.bicep --parameters $paramFile

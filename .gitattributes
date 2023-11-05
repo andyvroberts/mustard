@@ -1,0 +1,3 @@
+# detect sql as a language in github.
+*.sql linguist-detectable=true
+*.sql linguist-language=sql
