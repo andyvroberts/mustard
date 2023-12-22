@@ -17,9 +17,9 @@ permissions:
 jobs:
   just-deploy:
     runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./platform/rg-level
+    defaults:
+      run:
+        working-directory: ./platform/rg-level
 
     steps:
     # connect to Azure
