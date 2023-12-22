@@ -17,6 +17,10 @@ permissions:
 jobs:
   just-deploy:
     runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./platform/rg-level
+
     steps:
     # connect to Azure
     - name: 'AZ CLI Login'
@@ -32,6 +36,6 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: /platform/rg-level/main.bicep
+        template: ./main.bicep
         parameters: 'storagePrefix=mystore storageSKU=Standard_LRS'
         failOnStdErr: false

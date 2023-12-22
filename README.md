@@ -40,16 +40,23 @@ Then make the RBAC contributor role assignment to the identity of the Applicatio
 ```
 az role assignment create --role contributor --subscription $az_subid --assignee-object-id  $assignee_objectid --assignee-principal-type ServicePrincipal --scope subscriptions/$az_subid/resourceGroups/Mustard001/
 ```
+### Azure Credential for Github (Working)
+Finally, create an identity credential (a token for github to authenticate with Microsoft).  Using the MS beta graph API to create this was the only method by which a working credential could be configured.  
 
-### Azure Credential for Github
-Finally, create an identity credential (a token for github to authenticate with Microsoft).  
+Because the $application_objectid below, is in a string, substitute the actual id value into the command.  
+```
+az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/$application_objectid/federatedIdentityCredentials' --body '{"name":"SynDeployCred2","issuer":"https://token.actions.githubusercontent.com","subject":"repo:andyvroberts/mustard:ref:refs/heads/main","description":"Working Synapse Deploy Credential","audiences":["api://AzureADTokenExchange"]}'
+```
+
+### Azure Credential for Github (Not Working)
+To create an identity credential (a token for github to authenticate with Microsoft) using the CLI command:  
 Add the JSON configuration file for the credential in a file called _github-deploy-creds.json_  
 ```
 {
     "name": "MustardDeployCred",
     "issuer": "https://token.actions.githubusercontent.com/",
     "subject": "repo:andyvroberts/mustard:ref:refs/heads/main",
-    "description": "Synapse Deploy Credential",
+    "description": "Non-working Synapse Deploy Credential",
     "audiences": [
         "api://AzureADTokenExchange"
     ]
@@ -63,6 +70,7 @@ Execute the CLI command that uses the configuration:
 ```
 az ad app federated-credential create --id $application_objectid --parameters github-deploy-creds.json
 ``````  
+Note: Even though using this method produces *identical* Azure Portal credential details for the app registration as the beta graph api, this method always results in github logon error "Error: AADSTS700211: No matching federated identity record found for presented assertion issuer 'https://token.actions.githubusercontent.com'."
   
 ### Portal Locations
 In the Azure Portal, you can view the Application from:  
@@ -83,8 +91,3 @@ In your github repo secrets, save these new _action_ secret values:
 - AZURE_TENANT_ID = $az_tenantid
 - AZURE_SUBSCRIPTION_ID = $subid
 
-
-
-
-
-az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/$application_objectid/federatedIdentityCredentials' --body '{"name":"SynDeployCred2","issuer":"https://token.actions.githubusercontent.com","subject":"repo:andyvroberts/mustard:ref:refs/heads/main","description":"Second github credential test","audiences":["api://AzureADTokenExchange"]}'
