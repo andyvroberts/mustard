@@ -1,0 +1,28 @@
+name: Test Checkout action
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags' 
+
+jobs:
+  just-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout main branch'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: platform/rg-level/
+          #sparse-checkout-cone-mode: false
+
+      - name: 'Display directory content'
+        shell: bash | 
+          pwd
+          ls -l
