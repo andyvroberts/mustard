@@ -8,7 +8,8 @@ In order to deploy from github actions, a resource group (RG) must already exist
 az group create --name Mustard001 --location uksouth  
 ```
 
-To connect to Azure from github, we will use the OIDC method by creating an AAD Application. 
+### App Registration
+To connect to Azure from github, we will use the OIDC method by creating an AAD (Entra) Application. 
 ```
 az ad app create --display-name MustardSynDeploy
 ```
@@ -18,6 +19,7 @@ application_appid=$(az ad app list --display-name MustardSynDeploy --query '[].a
 application_objectid=$(az ad app list --display-name MustardSynDeploy --query '[].id' -o tsv)
 ```  
 
+### App Service Principal
 Next, create a service principal for the application.  
 ```
 az ad sp create --id $application_appid
@@ -33,39 +35,53 @@ az_tenantid=$(az account show --query tenantId -o tsv)
 az_subid=$(az account show --query id -o tsv)
 ```
 
+### RBAC Role Assignment
 Then make the RBAC contributor role assignment to the identity of the Application, for the Resource Group.
 ```
 az role assignment create --role contributor --subscription $az_subid --assignee-object-id  $assignee_objectid --assignee-principal-type ServicePrincipal --scope subscriptions/$az_subid/resourceGroups/Mustard001/
 ```
 
-Finally, 
-
+### Azure Credential for Github
+Finally, create an identity credential (a token for github to authenticate with Microsoft).  
+Add the JSON configuration file for the credential in a file called _github-deploy-creds.json_  
+```
+{
+    "name": "MustardDeployCred",
+    "issuer": "https://token.actions.githubusercontent.com/",
+    "subject": "repo:andyvroberts/mustard:ref:refs/heads/main",
+    "description": "Synapse Deploy Credential",
+    "audiences": [
+        "api://AzureADTokenExchange"
+    ]
+}
+```
+Note: If you want to connect the crediential to an Environment rather than a branch, then change this line:  
+```
+"subject": "repo:andyvroberts/mustard:environment:Production",
+```
+Execute the CLI command that uses the configuration:  
+```
+az ad app federated-credential create --id $application_objectid --parameters github-deploy-creds.json
+``````  
+  
+### Portal Locations
 In the Azure Portal, you can view the Application from:  
-Microsoft Entra Id > App Registration > the "all applications" tab.  
+Microsoft Entra Id > App Registrations > the "all applications" tab.  
 
 In the Azure Portal, you can view the Service Principal from:  
 Microsoft Entra Id > Enterprise Applications > remove filter 'Enterprise Applications 'and search for the app name.  
 
-
 In the Azure Portal, you can view the role assignments from the resource the role is assigned to:  
 Resource Groups > Mustard001 > Access Control (IAM) > 'Role Assignments' tab
 
+In the Azure Portal, you can view the github credential file from:  
+Microsoft Entra Id > App Registrations > the "all applications" tab > click on "MustardSynDeploy" > certificates & secrets > in the "federated credentials" tab, click on "MustardDeployCred"   
 
-
-```
-export MSYS_NO_PATHCONV=1
-```
-Then run the SP create.  
-```
-subid=$(az account show --query id -o tsv)
-
-az ad sp create-for-rbac --name SynDeployGH --role contributor --scopes /subscriptions/$subid/resourceGroups/Mustard001 --sdk-auth
-```
-
+### Github Secrets
 In your github repo secrets, save these new _action_ secret values:
-- AZURE_CREDENTIALS = the entire SP create-for-rbac command JSON result
-- AZURE_RG = Mustard001
-- AZURE_SUBSCRIPTION = the subscription ID used to create the SP (content of $subid)
+- AZURE_CLIENT_ID = $application_appid
+- AZURE_TENANT_ID = $az_tenantid
+- AZURE_SUBSCRIPTION_ID = $subid
 
 
 

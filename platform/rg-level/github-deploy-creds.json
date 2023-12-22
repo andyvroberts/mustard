@@ -1,0 +1,9 @@
+{
+    "name": "MustardDeployCred",
+    "issuer": "https://token.actions.githubusercontent.com/",
+    "subject": "repo:andyvroberts/mustard:ref:refs/heads/main",
+    "description": "Synapse Deploy Credential",
+    "audiences": [
+        "api://AzureADTokenExchange"
+    ]
+}
