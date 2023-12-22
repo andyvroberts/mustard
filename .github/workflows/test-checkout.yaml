@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout main branch'
+      - name: 'checkout rg-level files only'
         uses: actions/checkout@v4
         with:
           ref: main
@@ -30,3 +30,8 @@ jobs:
           cd platform/rg-level
           pwd
           ls -l
+
+      - name: 'where is my bicep file'
+        shell: bash
+        run: |
+          cat platform/rg-level/main.bicep
