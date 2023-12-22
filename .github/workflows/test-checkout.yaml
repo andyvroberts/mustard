@@ -20,10 +20,13 @@ jobs:
         with:
           ref: main
           sparse-checkout: platform/rg-level/
-          #sparse-checkout-cone-mode: false
+          sparse-checkout-cone-mode: false
 
       - name: 'Display directory content'
         shell: bash
         run: |
+          pwd
+          ls -l
+          cd platform/rg-level
           pwd
           ls -l
