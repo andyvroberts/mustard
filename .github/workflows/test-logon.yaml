@@ -1,5 +1,5 @@
 name: Azure Synapse Deploy to RG
-  on: workflow_dispatch
+  on: workflow_dispatch:
 
 permissions:
   id-token: write
