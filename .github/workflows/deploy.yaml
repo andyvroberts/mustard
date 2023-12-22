@@ -19,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout main branch'
+      - name: 'checkout rg-level files only'
         uses: actions/checkout@v4
         with:
           ref: main
           sparse-checkout: platform/rg-level/
-          #sparse-checkout-cone-mode: false
+          sparse-checkout-cone-mode: false
 
       # connect to Azure
       - name: 'AZ CLI Login'
@@ -40,6 +40,6 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./main.bicep
+          template: platform/rg-level/main.bicep
           parameters: 'storagePrefix=mystore storageSKU=Standard_LRS'
           failOnStdErr: false
