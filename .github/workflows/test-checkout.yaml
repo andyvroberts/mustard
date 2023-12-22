@@ -23,6 +23,7 @@ jobs:
           #sparse-checkout-cone-mode: false
 
       - name: 'Display directory content'
-        shell: bash | 
+        shell: bash
+        run: |
           pwd
           ls -l
