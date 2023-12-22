@@ -85,3 +85,6 @@ In your github repo secrets, save these new _action_ secret values:
 
 
 
+
+
+az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/$application_objectid/federatedIdentityCredentials' --body '{"name":"SynDeployCred2","issuer":"https://token.actions.githubusercontent.com","subject":"repo:andyvroberts/mustard:ref:refs/heads/main","description":"Second github credential test","audiences":["api://AzureADTokenExchange"]}'
