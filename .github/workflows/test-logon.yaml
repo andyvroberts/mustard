@@ -1,5 +1,13 @@
 name: Azure Synapse Deploy to RG
-  on: workflow_dispatch:
+  on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags' 
 
 permissions:
   id-token: write
