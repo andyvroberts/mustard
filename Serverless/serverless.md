@@ -20,3 +20,87 @@ If required, you can create a custom schema to better organise many tables.
 ## Open Rowset Queries
 See [the open rowset documentation](https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/develop-openrowset).  
 
+## Diagrams
+
+### Data Lake RBAC
+<details>  
+    <summary>ADLS Roles for Persona</summary>  
+
+:::mermaid
+flowchart TD
+    contributor["`_storage blob data contributor_`"]
+    reader["`_storage blob data reader_`"]
+    engineer["Data Engineer"]
+    architect["Data Architect"]
+    principal["Synapse Managed Identity"]
+    subgraph Create/Delete/Write/Read
+    contributor
+    end
+    subgraph Read
+    reader
+    end
+    contributor --> engineer
+    contributor --> principal
+    reader --> architect
+
+:::
+
+</details>  
+
+
+### Access Control
+<details>  
+    <summary>Serverless SQL Pool Database Access</summary> 
+
+</details>
+
+:::mermaid
+%%{init: 
+{'theme':'forest'}
+}%%
+flowchart LR
+    starting["Published Data Zone"]
+    dbs["Database1.Table1
+    Database2.View1
+    Database3.View2"]
+
+    subgraph serverless["Serverless SQL Pool"]
+        dbs
+    end
+
+    starting---|Synapse\nManaged\nIdentity|serverless
+
+:::
+
+<br>  
+<br>  
+
+
+:::mermaid
+%%{init: 
+{'theme':'neutral'}
+}%%
+
+flowchart LR
+    starting["Published Data Zone"]
+    db1["Database One"]
+    db2["Database Two"]
+
+    subgraph serverless[" "]
+        direction TB
+            subgraph ad1["Azure AD Group One\n "]
+            db1
+            end
+            subgraph ad2["Azure AD Group Two\n "]
+            db2
+            end
+        db1~~~db2
+    end
+
+    starting-->|Synapse\nManaged\nIdentity|serverless
+:::
+
+
+
+
+{'themeVariables': { 'edgeLabelBackground': 'transparent'}}
