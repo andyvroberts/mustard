@@ -1,33 +1,39 @@
-@minLength(3)
-@maxLength(11)
-param storagePrefix string
+param azTags object
+param synapseName string
+param azLocation string
+param dataLakeUrlFormat string
+param dataLakeName string
+param dataLakeRgName string
+param warehouseContainerName string
+//param bscContainerName string
+param dataVaultName string
+param adminUserSecretName string
+param adminUserPasswordSecretName string
+param ipAddress string
 
-@allowed([
-  'Standard_LRS'
-  'Standard_GRS'
-  'Standard_RAGRS'
-  'Standard_ZRS'
-  'Premium_LRS'
-  'Premium_ZRS'
-  'Standard_GZRS'
-  'Standard_RAGZRS'
-])
-param storageSKU string = 'Standard_LRS'
+param rgName string = resourceGroup().name
 
-param location string = resourceGroup().location
+// read the mandatory workspace db username and password
+resource lakeVault 'Microsoft.KeyVault/vaults@2016-10-01' existing = {
+  scope: resourceGroup(dataLakeRgName)
+  name: dataVaultName
+}
 
-var uniqueStorageName = '${storagePrefix}${uniqueString(resourceGroup().id)}'
-
-resource stg 'Microsoft.Storage/storageAccounts@2021-04-01' = {
-  name: uniqueStorageName
-  location: location
-  sku: {
-    name: storageSKU
-  }
-  kind: 'StorageV2'
-  properties: {
-    supportsHttpsTrafficOnly: true
+// create the synapse workspace
+module synapse 'workspace.bicep' = {
+  name: 'synapseModule'
+  scope: resourceGroup()
+  params: {
+    azTags: azTags
+    synapseName: synapseName
+    azLocation: azLocation
+    dataLakeUrlFormat: dataLakeUrlFormat
+    dataLakeName: dataLakeName
+    dataLakeFilesystemName: warehouseContainerName
+    synapseAdminUser: lakeVault.getSecret(adminUserSecretName)
+    synapseAdminUserPassword: lakeVault.getSecret(adminUserPasswordSecretName)
+    rgName: rgName
+    ipAddress: ipAddress
   }
 }
 
-output storageEndpoint object = stg.properties.primaryEndpoints
