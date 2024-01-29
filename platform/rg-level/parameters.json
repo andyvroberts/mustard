@@ -17,9 +17,6 @@
         "warehouseContainerName":{
             "value": "warehouse"
         },
-        "bscContainerName":{
-            "value": "bsc"
-        },
         "dataVaultName": {
             "value": "NrgdxVault2"
         },
@@ -33,7 +30,7 @@
             "value": "https://{0}.dfs.core.windows.net"
         },
         "ipAddress": {
-            "value": "172.30.140.150"
+            "value": "172.22.104.159"
         },
         "azTags": {
             "value": {
