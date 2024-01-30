@@ -1,5 +1,8 @@
 # Mustard
-Azure Synapse Analytics configuration, settings and deploymnet.
+Azure Synapse Analytics configuration, settings and deploy from Github.   
+
+Last Deployment:
+![Build Status](https://github.com/andyvroberts/mustard/actions/workflows/deploy.yaml/badge.svg)
 
 ## Deploy Prerequisites
 In order to deploy from github actions, a resource group (RG) must already exist in the target Azure subscription.  Create this with the Azure CLI.  
@@ -48,19 +51,27 @@ Because the $application_objectid below, is in a string, substitute the actual i
 az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/$application_objectid/federatedIdentityCredentials' --body '{"name":"SynDeployCred2","issuer":"https://token.actions.githubusercontent.com","subject":"repo:andyvroberts/mustard:ref:refs/heads/main","description":"Working Synapse Deploy Credential","audiences":["api://AzureADTokenExchange"]}'
 ```
 
-### Azure Service Principal with Deployment Grants for KeyVault Access
+### Azure Service Principal with Deployment Grants 
+We need deploy priviliges if we are making assignments to other Resource Groups 
+1. KeyVault grants
+3. Storage role assignment grants
+3. Storage Account grants
+  
+For example:  
 https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/key-vault-parameter?tabs=azure-cli#grant-deployment-access-to-the-secrets  
 For using KeyVaults that are not in the Synapse resource group, the app Service Principal must be granted the bespoke *Microsoft.KeyVault/vaults/deploy/action* permission at the subscription level.  This permission is not available by individual Vaults.      
 Note: this is needed here as our SP should NOT be granted contributor or owner on the KeyVault.  Follow the web page instructions.  
   
-Create the custom role definition kvrole.json file, substituting your subscription ID at the bottom: 
+Create the custom role definition deployrole.json file, substituting your subscription ID at the bottom: 
 ```
 {
-  "Name": "Key Vault resource manager template deployment operator",
+  "Name": "Deployment Principal",
   "IsCustom": true,
-  "Description": "Lets you deploy a resource manager template with the access to the secrets in the Key Vault.",
+  "Description": "Lets you deploy a resources without having contributor RBAC in another Resource Group.",
   "Actions": [
-    "Microsoft.KeyVault/vaults/deploy/action"
+    "Microsoft.KeyVault/vaults/deploy/action",
+    "Microsoft.Resources/deployments/write",
+    "Microsoft.Storage/storageAccounts/blobServices/write"
   ],
   "NotActions": [],
   "DataActions": [],
@@ -74,15 +85,14 @@ Then add the role to your subscription using the CLI:
 ```
 az role definition create --role-definition kvrole.json
 ```
-Finally, add the role assignment to the SP, substituting the subscription id and making sure that the resource group is the one which contains the KeyVault being accessed.    
+Finally, add the role assignment to the SP, substituting the subscription id and making sure that the resource group is the one which contains the resources being granted:      
 ```
 az role assignment create \
-  --role "Key Vault resource manager template deployment operator" \
+  --role "Deployment Principal" \
   --scope /subscriptions/<subscription_id>/resourceGroups/NrgdxData \
   --assignee-object-id $assignee_objectid \
   --assignee-principal-type ServicePrincipal
 ```
-
 
 ### Azure Credential for Github (Not Working)
 To create an identity credential (a token for github to authenticate with Microsoft) using the CLI command:  
