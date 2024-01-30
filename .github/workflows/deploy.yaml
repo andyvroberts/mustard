@@ -39,7 +39,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
+          resourceGroupName: 'Mustard001'
           template: platform/rg-level/main.bicep
           parameters: platform/rg-level/parameters.json
           failOnStdErr: false

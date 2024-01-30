@@ -17,9 +17,6 @@
         "warehouseContainerName":{
             "value": "warehouse"
         },
-        "bscContainerName":{
-            "value": "bsc"
-        },
         "dataVaultName": {
             "value": "NrgdxVault2"
         },
