@@ -2,7 +2,7 @@
 Azure Synapse Analytics configuration, settings and deploy from Github.   
 
 Last Deployment:
-![Build Status](https://github.com/andyvroberts/mustard/actions/workflows/deploy.yaml/badge.svg)
+![Azure Synapse Deploy to RG](https://github.com/andyvroberts/mustard/actions/workflows/deploy.yaml/badge.svg)
 
 ## Deploy Prerequisites
 In order to deploy from github actions, a resource group (RG) must already exist in the target Azure subscription.  Create this with the Azure CLI.  
@@ -65,7 +65,7 @@ Note: this is needed here as our SP should NOT be granted contributor or owner o
 Create the custom role definition deployrole.json file, substituting your subscription ID at the bottom: 
 ```
 {
-  "Name": "Deployment Principal",
+  "Name": "AVR Deployment Principal",
   "IsCustom": true,
   "Description": "Lets you deploy a resources without having contributor RBAC in another Resource Group.",
   "Actions": [

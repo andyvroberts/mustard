@@ -5,7 +5,7 @@ param dataLakeUrlFormat string
 param dataLakeName string
 param dataLakeRgName string
 param warehouseContainerName string
-param bscContainerName string
+//param bscContainerName string
 param dataVaultName string
 param adminUserSecretName string
 param adminUserPasswordSecretName string
@@ -37,15 +37,15 @@ module synapse 'workspace.bicep' = {
   }
 }
 
-// assign data lake rbac roles to the synapse workspace identity
-module adlsBlobRole 'adls-role-assign.bicep' = {
-  name: 'adlsBlobRoleModule'
-  scope: resourceGroup(dataLakeRgName)
-  params: {
-    principalId: synapse.outputs.synapsePrincipalId
-    synapseName: synapseName
-    adlsName: dataLakeName
-    warehouseContainerName: warehouseContainerName
-    bscContainerName: bscContainerName
-  }
-}
+// // assign data lake rbac roles to the synapse workspace identity
+// module adlsBlobRole 'adls-role-assign.bicep' = {
+//   name: 'adlsBlobRoleModule'
+//   scope: resourceGroup(dataLakeRgName)
+//   params: {
+//     principalId: synapse.outputs.synapsePrincipalId
+//     synapseName: synapseName
+//     adlsName: dataLakeName
+//     warehouseContainerName: warehouseContainerName
+//     bscContainerName: bscContainerName
+//   }
+// }
