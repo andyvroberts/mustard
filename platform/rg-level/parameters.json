@@ -6,7 +6,7 @@
             "value": "uksouth"
         },
         "synapseName": {
-            "value": "syndev004"
+            "value": "syndev005"
         },
         "dataLakeName": {
             "value": "nrgdxlake"
@@ -16,6 +16,9 @@
         },
         "warehouseContainerName":{
             "value": "warehouse"
+        },
+        "bscContainerName":{
+            "value": "bsc"
         },
         "dataVaultName": {
             "value": "NrgdxVault2"
