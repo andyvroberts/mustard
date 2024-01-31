@@ -67,12 +67,16 @@ Create the custom role definition deployrole.json file, substituting your subscr
   "IsCustom": true,
   "Description": "Lets you deploy a resources without having contributor RBAC in another Resource Group.",
   "Actions": [
-    "Microsoft.KeyVault/vaults/deploy/action",
-    "Microsoft.Resources/deployments/write",
-    "Microsoft.Resources/deployments/operationStatuses/read",
-    "Microsoft.Storage/storageAccounts/blobServices",
-    "Microsoft.Storage/storageAccounts/blobServices/containers/write",
-    "Microsoft.Authorization/roleAssignments/write"
+      "Microsoft.KeyVault/vaults/deploy/action",
+      "Microsoft.Resources/deployments/write",
+      "Microsoft.Resources/deployments/read",
+      "Microsoft.Resources/deployments/operationStatuses/read",
+      "Microsoft.Storage/storageAccounts/blobServices/write",
+      "Microsoft.Storage/storageAccounts/blobServices/read",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/write",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/read",
+      "Microsoft.Authorization/roleAssignments/write",
+      "Microsoft.Authorization/roleAssignments/read"
   ],
   "NotActions": [],
   "DataActions": [],
