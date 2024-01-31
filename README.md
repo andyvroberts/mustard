@@ -69,7 +69,10 @@ Create the custom role definition deployrole.json file, substituting your subscr
   "Actions": [
     "Microsoft.KeyVault/vaults/deploy/action",
     "Microsoft.Resources/deployments/write",
-    "Microsoft.Storage/storageAccounts/blobServices"
+    "Microsoft.Resources/deployments/operationStatuses/read",
+    "Microsoft.Storage/storageAccounts/blobServices",
+    "Microsoft.Storage/storageAccounts/blobServices/containers/write",
+    "Microsoft.Authorization/roleAssignments/write"
   ],
   "NotActions": [],
   "DataActions": [],
@@ -138,7 +141,5 @@ In your github repo secrets, save these new _action_ secret values:
 - AZURE_TENANT_ID = $az_tenantid
 - AZURE_SUBSCRIPTION_ID = $subid
 - AZURE_RG = Mustard001
-
-
 
 
