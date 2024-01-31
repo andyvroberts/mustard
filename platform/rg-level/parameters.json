@@ -6,7 +6,7 @@
             "value": "uksouth"
         },
         "synapseName": {
-            "value": "syndev006"
+            "value": "syndev007"
         },
         "dataLakeName": {
             "value": "nrgdxlake"
@@ -16,6 +16,9 @@
         },
         "warehouseContainerName":{
             "value": "warehouse"
+        },
+        "bscContainerName":{
+            "value": "bscs"
         },
         "dataVaultName": {
             "value": "NrgdxVault2"
@@ -30,7 +33,7 @@
             "value": "https://{0}.dfs.core.windows.net"
         },
         "ipAddress": {
-            "value": "172.22.104.159"
+            "value": "100.115.92.195"
         },
         "azTags": {
             "value": {

@@ -1,7 +1,7 @@
 # Mustard
 Azure Synapse Analytics configuration, settings and deploy from Github.   
 
-Last Deployment:
+Last Deployment:  
 ![Azure Synapse Deploy to RG](https://github.com/andyvroberts/mustard/actions/workflows/deploy.yaml/badge.svg)
 
 ## Deploy Prerequisites
@@ -58,9 +58,7 @@ We need deploy priviliges if we are making assignments to other Resource Groups
 3. Storage Account grants
   
 For example:  
-https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/key-vault-parameter?tabs=azure-cli#grant-deployment-access-to-the-secrets  
-For using KeyVaults that are not in the Synapse resource group, the app Service Principal must be granted the bespoke *Microsoft.KeyVault/vaults/deploy/action* permission at the subscription level.  This permission is not available by individual Vaults.      
-Note: this is needed here as our SP should NOT be granted contributor or owner on the KeyVault.  Follow the web page instructions.  
+https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/key-vault-parameter?tabs=azure-cli#grant-deployment-access-to-the-secrets    
   
 Create the custom role definition deployrole.json file, substituting your subscription ID at the bottom: 
 ```
@@ -71,25 +69,25 @@ Create the custom role definition deployrole.json file, substituting your subscr
   "Actions": [
     "Microsoft.KeyVault/vaults/deploy/action",
     "Microsoft.Resources/deployments/write",
-    "Microsoft.Storage/storageAccounts/blobServices/write"
+    "Microsoft.Storage/storageAccounts/blobServices"
   ],
   "NotActions": [],
   "DataActions": [],
   "NotDataActions": [],
   "AssignableScopes": [
-    "/subscriptions/00000000-0000-0000-0000-000000000000"
+    "/subscriptions/"$az_subid
   ]
 }
 ```
 Then add the role to your subscription using the CLI:  
 ```
-az role definition create --role-definition kvrole.json
+az role definition create --role-definition deployrole.json
 ```
 Finally, add the role assignment to the SP, substituting the subscription id and making sure that the resource group is the one which contains the resources being granted:      
 ```
 az role assignment create \
-  --role "Deployment Principal" \
-  --scope /subscriptions/<subscription_id>/resourceGroups/NrgdxData \
+  --role "AVR Deployment Principal" \
+  --scope /subscriptions/$az_subid/resourceGroups/NrgdxData \
   --assignee-object-id $assignee_objectid \
   --assignee-principal-type ServicePrincipal
 ```
